@@ -7,7 +7,7 @@ function Decision() {
   const navigate = useNavigate(); // Initialize useNavigate
 
   const handleYes = () => {
-    navigate('/hi'); // Navigate to /hi if the user has credentials
+    navigate('/home'); // Navigate to /hi if the user has credentials
   };
 
   const handleNo = () => {
