@@ -27,7 +27,7 @@ function Login() {
         alert('Login successful'); // Optional: you can keep or remove this alert
       }
       // Redirect to /cred after successful login/signup
-      navigate('/cred');
+      navigate('/decision');
     } catch (error) {
       setError(error.message); // Set error message for any errors encountered
     }
