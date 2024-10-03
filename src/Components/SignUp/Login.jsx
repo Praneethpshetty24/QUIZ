@@ -35,7 +35,7 @@ function Login() {
 
   return (
     <div className="login-container">
-      <h1 className="app-name">THE QUIZ</h1>
+      <h1 className="app-name">THE QUIZ...</h1>
       <h2>{isSignUp ? 'Sign Up' : 'Login'}</h2>
       <form onSubmit={handleSubmit} className="login-form">
         <input
