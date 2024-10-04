@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Test.css';
 import Webcam from 'react-webcam';
+import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { db } from '../../firebase'; 
 
 function Test() {
   const [questions, setQuestions] = useState([]);
@@ -15,22 +17,20 @@ function Test() {
   const timeoutRef = useRef(null);
 
   useEffect(() => {
-    const dummyQuestions = [
-      {
-        id: 1,
-        question: "What is the capital of France?",
-        options: ["Paris", "Berlin", "Madrid", "Rome"],
-        correctAnswer: "Paris"
-      },
-      {
-        id: 2,
-        question: "What is 2 + 2?",
-        options: ["3", "4", "5", "6"],
-        correctAnswer: "4"
-      }
-    ];
+    const fetchQuestions = async () => {
+      try {
+        const questionsCollectionRef = collection(db, 'questions');
+        const questionSnapshot = await getDocs(questionsCollectionRef);
+        const allQuestions = questionSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-    setQuestions(dummyQuestions);
+        const selectedQuestions = getRandomQuestions(allQuestions, 10);
+        setQuestions(selectedQuestions);
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+      }
+    };
+
+    fetchQuestions();
 
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
@@ -38,6 +38,25 @@ function Test() {
 
     return () => clearInterval(timer);
   }, []);
+
+  const getRandomQuestions = (questions, num) => {
+    const shuffled = questions.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, num);
+  };
+
+  // Function to upload questions to Firestore (optional if you want to keep it)
+  const uploadQuestionsToFirestore = async (questions) => {
+    const questionsCollectionRef = collection(db, 'questions');
+
+    for (const question of questions) {
+      try {
+        await addDoc(questionsCollectionRef, question);
+        console.log(`Uploaded question: ${question.question}`);
+      } catch (error) {
+        console.error('Error uploading question:', error);
+      }
+    }
+  };
 
   useEffect(() => {
     const handleVisibilityChange = () => {
