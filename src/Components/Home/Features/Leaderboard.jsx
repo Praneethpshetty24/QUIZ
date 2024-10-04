@@ -27,6 +27,13 @@ const Leaderboard = () => {
     fetchLeaderboard();
   }, []);
 
+  // Function to format time in minutes and seconds
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes} min ${remainingSeconds} sec`;
+  };
+
   const showAnalytics = (entry) => {
     setSelectedEntry(entry); // Set the selected entry for graph analysis
     setTimeout(() => drawChart(entry), 100); // Delay to ensure the modal is rendered before drawing
@@ -41,10 +48,10 @@ const Leaderboard = () => {
     new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['Score', 'Time Taken (minutes)'],
+        labels: ['Score', 'Time Taken (seconds)'], // Updated to show time in seconds
         datasets: [{
           label: 'Test Data',
-          data: [entry.score, Math.floor(entry.timeTaken / 60)],
+          data: [entry.score, entry.timeTaken], // Use timeTaken directly in seconds for the graph
           backgroundColor: ['#4CAF50', '#FF6384'],
           borderColor: ['#4CAF50', '#FF6384'],
           borderWidth: 1
@@ -66,7 +73,7 @@ const Leaderboard = () => {
           <tr>
             <th>Email</th>
             <th>Score</th>
-            <th>Time Taken (minutes)</th>
+            <th>Time Taken</th>
             <th>Analysis</th>
           </tr>
         </thead>
@@ -75,7 +82,7 @@ const Leaderboard = () => {
             <tr key={entry.id}>
               <td>{entry.email}</td>
               <td>{entry.score}</td>
-              <td>{Math.floor(entry.timeTaken / 60)}</td>
+              <td>{formatTime(entry.timeTaken)}</td> {/* Display formatted time */}
               <td>
                 <button className="analytics-btn" onClick={() => showAnalytics(entry)}>Analyze</button>
               </td>

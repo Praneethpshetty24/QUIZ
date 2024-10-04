@@ -1,19 +1,40 @@
-/* src/Components/Decision/Decision.css */
+/* General styles for the page */
+.decision-page {
+    background-image: url('https://images.unsplash.com/photo-1496175681544-2637f9f2c0bc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDd8fGJsdXUlMjBwb2xpbmFyaXxlbnwwfHx8fDE2NjI4NzQ3OTM&ixlib=rb-1.2.1&q=80&w=1080'); /* Change to your desired background image */
+    background-size: cover;
+    background-position: center;
+    height: 100vh; /* Full height of the viewport */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .decision-container {
     max-width: 400px;
-    margin: 50px auto;
     padding: 20px;
-    border: 1px solid #ccc;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     text-align: center;
-    background-color: #fefefe;
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+}
+
+.hero-icon {
+    font-size: 60px;
+    color: #007bff;
+    margin-bottom: 20px;
 }
 
 h2 {
     margin-bottom: 20px;
     font-family: 'Arial', sans-serif;
     color: #333;
+}
+
+.funny-text {
+    margin-bottom: 20px;
+    font-family: 'Comic Sans MS', sans-serif;
+    font-size: 16px;
+    color: #555;
 }
 
 .decision-buttons {
@@ -29,9 +50,37 @@ h2 {
     color: white;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 .decision-button:hover {
     background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.decision-button:active {
+    transform: scale(0.95);
+}
+
+.info-section {
+    margin-top: 20px;
+}
+
+.info-icon {
+    font-size: 24px;
+    color: #ff5722;
+}
+
+.info-text {
+    font-size: 14px;
+    color: #777;
+}
+
+.footer {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #777;
 }

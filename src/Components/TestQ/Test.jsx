@@ -2,28 +2,29 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import Webcam from 'react-webcam';
 import { collection, getDocs, addDoc } from 'firebase/firestore';
-import { db } from '../../Firebase'; // Import Firebase database
+import { db } from '../../Firebase';
 import './Test.css';
 
 function Test() {
-  const { state } = useLocation(); // Access the passed state
-  const { email, uuiId } = state || {}; // Destructure email and uuiId
+  const { state } = useLocation();
+  const { email, uuiId } = state || {};
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes timer
-  const [startTime] = useState(Date.now()); // Track test start time
+  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes (600 seconds)
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [totalTimeTaken, setTotalTimeTaken] = useState(0); // Total time taken in seconds
+  const startTimeRef = useRef(Date.now()); // Track start time using a ref to maintain value across renders
   const timeoutRef = useRef(null);
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const questionsCollectionRef = collection(db, 'questions'); // Fetch questions from Firestore
+        const questionsCollectionRef = collection(db, 'questions');
         const questionSnapshot = await getDocs(questionsCollectionRef);
         const allQuestions = questionSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-        const selectedQuestions = getRandomQuestions(allQuestions, 10); // Select 10 random questions
+        const selectedQuestions = getRandomQuestions(allQuestions, 10);
         setQuestions(selectedQuestions);
       } catch (error) {
         console.error('Error fetching questions:', error);
@@ -32,11 +33,11 @@ function Test() {
 
     fetchQuestions();
 
-    const timer = setInterval(() => {
+    timeoutRef.current = setInterval(() => {
       setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
     }, 1000);
 
-    return () => clearInterval(timer);
+    return () => clearInterval(timeoutRef.current);
   }, []);
 
   const getRandomQuestions = (questions, num) => {
@@ -51,37 +52,58 @@ function Test() {
     }));
   };
 
-  // Function to handle test submission
+  // Stop the timer and submit the test
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let correctAnswers = 0;
+    clearInterval(timeoutRef.current); // Stop the timer
 
-    // Calculate the score based on correct answers
+    let correctAnswers = 0;
     questions.forEach((question) => {
       if (answers[question.id] === question.correctAnswer) {
         correctAnswers += 1;
       }
     });
 
-    const totalTimeTaken = Math.floor((Date.now() - startTime) / 1000); // Calculate total time taken in seconds
+    const endTime = Date.now();
+    const totalTimeTakenInSeconds = Math.floor((endTime - startTimeRef.current) / 1000); // Calculate time in seconds
+    setTotalTimeTaken(totalTimeTakenInSeconds); // Save total time taken in state
     setScore(correctAnswers);
     setSubmitted(true);
 
-    // Save the test result to Firestore in a new collection 'userTestResults'
     try {
-      const testResultsRef = collection(db, 'userTestResults'); // Create or access 'userTestResults' collection
+      const testResultsRef = collection(db, 'userTestResults');
       await addDoc(testResultsRef, {
         email,
         uuiId,
         score: correctAnswers,
         totalQuestions: questions.length,
-        timeTaken: totalTimeTaken,
+        timeTaken: totalTimeTakenInSeconds, // Time in seconds
         timestamp: new Date(),
       });
 
       console.log('Test results saved successfully');
     } catch (error) {
-      console.error('Error saving test results:', error.message); // Log the error message
+      console.error('Error saving test results:', error.message);
+    }
+  };
+
+  // Format time in MM:SS
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+  };
+
+  // Navigation between questions
+  const handleNext = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
 
@@ -89,7 +111,7 @@ function Test() {
     <div className="test-container">
       <h2 className="title">Take Your Test</h2>
       <div className="header">
-        <div className="timer">Time Left: {timeLeft} seconds</div>
+        <div className="timer">Time Left: {formatTime(timeLeft)}</div>
         <div className="webcam-container">
           <Webcam className="webcam-feed" videoConstraints={{ width: 150, height: 150, facingMode: 'user' }} />
         </div>
@@ -98,30 +120,53 @@ function Test() {
       {submitted ? (
         <div className="result-container">
           <h3>Your Score: {score} out of {questions.length}</h3>
-          <p>Time Taken: {Math.floor((Date.now() - startTime) / 60000)} minutes</p>
+          <p>
+            Time Taken: {Math.floor(totalTimeTaken / 60)} minutes and {totalTimeTaken % 60} seconds
+          </p>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="test-form">
-          {questions.length > 0 && questions.map((question, index) => (
-            <div key={question.id} className="question-card">
-              <h4>{index + 1}. {question.question}</h4>
-              {question.options.map((option, optionIndex) => (
+          {questions.length > 0 && (
+            <div className="question-card">
+              <h4>{currentQuestionIndex + 1}. {questions[currentQuestionIndex].question}</h4>
+              {questions[currentQuestionIndex].options.map((option, optionIndex) => (
                 <div key={optionIndex} className="option">
                   <input
                     type="radio"
-                    name={question.id}
+                    name={questions[currentQuestionIndex].id}
                     value={option}
-                    checked={answers[question.id] === option}
-                    onChange={() => handleAnswerChange(question.id, option)}
+                    checked={answers[questions[currentQuestionIndex].id] === option}
+                    onChange={() => handleAnswerChange(questions[currentQuestionIndex].id, option)}
                     required
                   />
                   <label>{option}</label>
                 </div>
               ))}
             </div>
-          ))}
+          )}
 
-          <button type="submit" className="submit-button">Submit</button>
+          <div className="navigation-buttons">
+            <button
+              type="button"
+              className="prev-button"
+              onClick={handlePrev}
+              disabled={currentQuestionIndex === 0}
+            >
+              Previous
+            </button>
+
+            {currentQuestionIndex < questions.length - 1 ? (
+              <button
+                type="button"
+                className="next-button"
+                onClick={handleNext}
+              >
+                Next
+              </button>
+            ) : (
+              <button type="submit" className="submit-button">Submit</button>
+            )}
+          </div>
         </form>
       )}
     </div>
