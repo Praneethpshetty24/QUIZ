@@ -9,7 +9,6 @@ function Test() {
   const { state } = useLocation(); // Access the passed state
   const { email, uuiId } = state || {}; // Destructure email and uuiId
   const [questions, setQuestions] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
@@ -103,33 +102,26 @@ function Test() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="test-form">
-          {questions.length > 0 && (
-            <div className="question-card">
-              <h4>{questions[currentQuestionIndex].question}</h4>
-              {questions[currentQuestionIndex].options.map((option, index) => (
-                <div key={index} className="option">
+          {questions.length > 0 && questions.map((question, index) => (
+            <div key={question.id} className="question-card">
+              <h4>{index + 1}. {question.question}</h4>
+              {question.options.map((option, optionIndex) => (
+                <div key={optionIndex} className="option">
                   <input
                     type="radio"
-                    name={questions[currentQuestionIndex].id}
+                    name={question.id}
                     value={option}
-                    checked={answers[questions[currentQuestionIndex].id] === option}
-                    onChange={() => handleAnswerChange(questions[currentQuestionIndex].id, option)}
+                    checked={answers[question.id] === option}
+                    onChange={() => handleAnswerChange(question.id, option)}
                     required
                   />
                   <label>{option}</label>
                 </div>
               ))}
             </div>
-          )}
+          ))}
 
-          <div className="navigation-buttons">
-            <button type="button" onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))} disabled={currentQuestionIndex === 0}>Previous</button>
-            <button type="button" onClick={() => setCurrentQuestionIndex(prev => Math.min(questions.length - 1, prev + 1))} disabled={currentQuestionIndex === questions.length - 1}>Next</button>
-          </div>
-
-          {currentQuestionIndex === questions.length - 1 && (
-            <button type="submit" className="submit-button">Submit</button>
-          )}
+          <button type="submit" className="submit-button">Submit</button>
         </form>
       )}
     </div>

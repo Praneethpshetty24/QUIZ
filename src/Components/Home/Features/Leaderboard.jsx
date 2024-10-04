@@ -1,22 +1,29 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Leaderboard.css'; // Optional: Import a CSS file for additional styling
+// src/components/Leaderboard.js
+import React, { useEffect, useState } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../../Firebase'; // Import Firebase database
+import './Leaderboard.css'; // Import CSS for styling
 
 const Leaderboard = () => {
-  const navigate = useNavigate();
+  const [leaderboardData, setLeaderboardData] = useState([]);
 
-  // Dummy data for leaderboard
-  const leaderboardData = [
-    { id: 1, name: 'Alice', score: 95 },
-    { id: 2, name: 'Bob', score: 90 },
-    { id: 3, name: 'Charlie', score: 85 },
-    { id: 4, name: 'David', score: 80 },
-    { id: 5, name: 'Eve', score: 75 }
-  ];
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        const testResultsCollectionRef = collection(db, 'userTestResults');
+        const snapshot = await getDocs(testResultsCollectionRef);
+        const results = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-  const handleViewAnalytics = (id) => {
-    navigate(`/analytics/${id}`); // Navigate to the analytics page for the specific user
-  };
+        // Sort results by score in descending order
+        results.sort((a, b) => b.score - a.score);
+        setLeaderboardData(results);
+      } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+      }
+    };
+
+    fetchLeaderboard();
+  }, []);
 
   return (
     <div className="leaderboard-container">
@@ -24,26 +31,17 @@ const Leaderboard = () => {
       <table className="leaderboard-table">
         <thead>
           <tr>
-            <th>Rank</th>
-            <th>Name</th>
+            <th>Email</th>
             <th>Score</th>
-            <th>Analytics</th>
+            <th>Time Taken (minutes)</th>
           </tr>
         </thead>
         <tbody>
-          {leaderboardData.map((user, index) => (
-            <tr key={user.id}>
-              <td>{index + 1}</td>
-              <td>{user.name}</td>
-              <td>{user.score}</td>
-              <td>
-                <button 
-                  className="analytics-btn"
-                  onClick={() => handleViewAnalytics(user.id)}
-                >
-                  View Analytics
-                </button>
-              </td>
+          {leaderboardData.map((entry, index) => (
+            <tr key={entry.id}>
+              <td>{entry.email}</td>
+              <td>{entry.score}</td>
+              <td>{Math.floor(entry.timeTaken / 60)}</td>
             </tr>
           ))}
         </tbody>
