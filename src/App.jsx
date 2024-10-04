@@ -19,7 +19,6 @@ function App() {
         <Route path="/test" element={<Test />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/Question" element={<Question />} />
-
       </Routes>
     </Router>
   );
