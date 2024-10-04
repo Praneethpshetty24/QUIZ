@@ -27,8 +27,8 @@ function Home() {
         // User not registered
         setError('User not registered. Please register first.');
       } else {
-        // User is registered, navigate to /test
-        navigate('/test');
+        // User is registered, navigate to /test and pass user details
+        navigate('/test', { state: { email, uuiId } });
       }
     } catch (err) {
       setError('Error checking user registration: ' + err.message);

@@ -1,29 +1,30 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './Test.css';
+import { useLocation } from 'react-router-dom';
 import Webcam from 'react-webcam';
 import { collection, getDocs, addDoc } from 'firebase/firestore';
-import { db } from '../../firebase'; 
+import { db } from '../../Firebase'; // Import Firebase database
+import './Test.css';
 
 function Test() {
+  const { state } = useLocation(); // Access the passed state
+  const { email, uuiId } = state || {}; // Destructure email and uuiId
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes timer
-  const [warning, setWarning] = useState(false);
-  const [isTabActive, setIsTabActive] = useState(true);
-  const [awayTime, setAwayTime] = useState(0);
+  const [startTime] = useState(Date.now()); // Track test start time
   const timeoutRef = useRef(null);
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const questionsCollectionRef = collection(db, 'questions');
+        const questionsCollectionRef = collection(db, 'questions'); // Fetch questions from Firestore
         const questionSnapshot = await getDocs(questionsCollectionRef);
         const allQuestions = questionSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-        const selectedQuestions = getRandomQuestions(allQuestions, 10);
+        const selectedQuestions = getRandomQuestions(allQuestions, 10); // Select 10 random questions
         setQuestions(selectedQuestions);
       } catch (error) {
         console.error('Error fetching questions:', error);
@@ -44,60 +45,6 @@ function Test() {
     return shuffled.slice(0, num);
   };
 
-  // Function to upload questions to Firestore (optional if you want to keep it)
-  const uploadQuestionsToFirestore = async (questions) => {
-    const questionsCollectionRef = collection(db, 'questions');
-
-    for (const question of questions) {
-      try {
-        await addDoc(questionsCollectionRef, question);
-        console.log(`Uploaded question: ${question.question}`);
-      } catch (error) {
-        console.error('Error uploading question:', error);
-      }
-    }
-  };
-
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        setIsTabActive(false);
-        if (!warning) {
-          alert('You have switched tabs! The test will automatically be submitted in 5 minutes if you do not return.');
-        }
-      } else {
-        setIsTabActive(true);
-        setAwayTime(0);
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [warning]);
-
-  useEffect(() => {
-    if (!isTabActive) {
-      timeoutRef.current = setInterval(() => {
-        setAwayTime((prevAwayTime) => {
-          if (prevAwayTime >= 299) {
-            clearInterval(timeoutRef.current);
-            handleSubmit();
-            setWarning(true);
-            alert("Test automatically submitted after 5 minutes of inactivity.");
-          }
-          return prevAwayTime + 1;
-        });
-      }, 1000);
-    } else {
-      clearInterval(timeoutRef.current);
-    }
-
-    return () => clearInterval(timeoutRef.current);
-  }, [isTabActive]);
-
   const handleAnswerChange = (questionId, selectedOption) => {
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
@@ -105,61 +52,54 @@ function Test() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    if (e) e.preventDefault();
+  // Function to handle test submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     let correctAnswers = 0;
 
+    // Calculate the score based on correct answers
     questions.forEach((question) => {
       if (answers[question.id] === question.correctAnswer) {
         correctAnswers += 1;
       }
     });
 
+    const totalTimeTaken = Math.floor((Date.now() - startTime) / 1000); // Calculate total time taken in seconds
     setScore(correctAnswers);
     setSubmitted(true);
-  };
 
-  const handleNextQuestion = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    // Save the test result to Firestore in a new collection 'userTestResults'
+    try {
+      const testResultsRef = collection(db, 'userTestResults'); // Create or access 'userTestResults' collection
+      await addDoc(testResultsRef, {
+        email,
+        uuiId,
+        score: correctAnswers,
+        totalQuestions: questions.length,
+        timeTaken: totalTimeTaken,
+        timestamp: new Date(),
+      });
+
+      console.log('Test results saved successfully');
+    } catch (error) {
+      console.error('Error saving test results:', error.message); // Log the error message
     }
-  };
-
-  const handlePrevQuestion = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
-  };
-
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
   return (
     <div className="test-container">
       <h2 className="title">Take Your Test</h2>
       <div className="header">
-        <div className="timer">Time Left: {formatTime(timeLeft)}</div>
+        <div className="timer">Time Left: {timeLeft} seconds</div>
         <div className="webcam-container">
-          <Webcam
-            className="webcam-feed"
-            videoConstraints={{ width: 150, height: 150, facingMode: 'user' }}
-          />
+          <Webcam className="webcam-feed" videoConstraints={{ width: 150, height: 150, facingMode: 'user' }} />
         </div>
       </div>
-
-      {warning && (
-        <div className="warning-message">
-          <h3>Test Ended Due to Inactivity!</h3>
-          <p>You switched tabs for too long, and the test has been automatically submitted.</p>
-        </div>
-      )}
 
       {submitted ? (
         <div className="result-container">
           <h3>Your Score: {score} out of {questions.length}</h3>
+          <p>Time Taken: {Math.floor((Date.now() - startTime) / 60000)} minutes</p>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="test-form">
@@ -183,12 +123,8 @@ function Test() {
           )}
 
           <div className="navigation-buttons">
-            <button type="button" onClick={handlePrevQuestion} disabled={currentQuestionIndex === 0} className="prev-button">
-              Previous
-            </button>
-            <button type="button" onClick={handleNextQuestion} disabled={currentQuestionIndex === questions.length - 1} className="next-button">
-              Next
-            </button>
+            <button type="button" onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))} disabled={currentQuestionIndex === 0}>Previous</button>
+            <button type="button" onClick={() => setCurrentQuestionIndex(prev => Math.min(questions.length - 1, prev + 1))} disabled={currentQuestionIndex === questions.length - 1}>Next</button>
           </div>
 
           {currentQuestionIndex === questions.length - 1 && (
