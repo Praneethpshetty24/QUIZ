@@ -1,15 +1,38 @@
-// src/Components/Home/Home.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // For programmatic navigation
+import { db } from '../../Firebase'; 
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import './Home.css'; // Import your CSS
 
 function Home() {
   const [email, setEmail] = useState('');
   const [uuiId, setUuiId] = useState('');
+  const [error, setError] = useState(''); // To show an error message
+  const navigate = useNavigate(); // Use this to navigate to the /test page
 
-  const handleTakeTest = () => {
-    // Handle the test initiation here
-    console.log({ email, uuiId });
-    // Add your logic to start the test, e.g., navigate to the test page
+  const handleTakeTest = async () => {
+    setError(''); // Reset error message
+
+    // Query Firestore to check if the user is registered
+    const q = query(
+      collection(db, 'credentials'),
+      where('email', '==', email),
+      where('uuiId', '==', uuiId)
+    );
+
+    try {
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        // User not registered
+        setError('User not registered. Please register first.');
+      } else {
+        // User is registered, navigate to /test
+        navigate('/test');
+      }
+    } catch (err) {
+      setError('Error checking user registration: ' + err.message);
+    }
   };
 
   return (
@@ -25,6 +48,7 @@ function Home() {
       <div className="content">
         <h2>Welcome to THE QUIZ!</h2>
         <p>Ready to take your test?</p>
+        {error && <p className="error">{error}</p>} {/* Display error message */}
         <div className="input-container">
           <input
             type="email"
@@ -41,7 +65,9 @@ function Home() {
             required
           />
         </div>
-        <button onClick={handleTakeTest} className="take-test-button">Take Test</button>
+        <button onClick={handleTakeTest} className="take-test-button">
+          Take Test
+        </button>
       </div>
     </div>
   );

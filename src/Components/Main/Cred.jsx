@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { db } from '../../Firebase'; // Adjust the import based on your Firebase setup
-import { collection, addDoc } from 'firebase/firestore'; // Import Firestore functions
+import { db } from '../../Firebase'; 
+import { collection, addDoc } from 'firebase/firestore'; 
 import './Cred.css'; // Import your CSS
 
 function Cred() {
