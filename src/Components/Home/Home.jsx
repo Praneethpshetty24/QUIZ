@@ -5,8 +5,8 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import './Home.css'; // Import your CSS
 
 function Home() {
-  const [email, setEmail] = useState('');
-  const [uuiId, setUuiId] = useState('');
+  const [email, setEmail] = useState(''); // State for email input
+  const [uuiId, setUuiId] = useState(''); // State for Unique User ID input
   const [error, setError] = useState(''); // To show an error message
   const navigate = useNavigate(); // Use this to navigate to the /test page
 
@@ -28,7 +28,11 @@ function Home() {
         setError('User not registered. Please register first.');
       } else {
         // User is registered, navigate to /test and pass user details
-        navigate('/test', { state: { email, uuiId } });
+        const userData = querySnapshot.docs[0].data(); // Get the first matched user data
+        const { name } = userData; // Extract the name
+
+        // Navigate with email, uuiId, and name
+        navigate('/test', { state: { email, uuiId, name } });
       }
     } catch (err) {
       setError('Error checking user registration: ' + err.message);

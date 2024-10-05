@@ -7,7 +7,7 @@ import './Test.css';
 
 function Test() {
   const { state } = useLocation();
-  const { email, uuiId } = state || {};
+  const { email, uuiId, name } = state || {}; // Include name in the state
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
@@ -73,12 +73,13 @@ function Test() {
     try {
       const testResultsRef = collection(db, 'userTestResults');
       await addDoc(testResultsRef, {
-        email,
-        uuiId,
-        score: correctAnswers,
-        totalQuestions: questions.length,
+        name, // Save the user's name
+        email, // Save the user's email
+        uuiId, // Save the user's unique identifier
+        score: correctAnswers, // Save the score
+        totalQuestions: questions.length, // Save the total number of questions
         timeTaken: totalTimeTakenInSeconds, // Time in seconds
-        timestamp: new Date(),
+        timestamp: new Date(), // Save the current timestamp
       });
 
       console.log('Test results saved successfully');
@@ -119,7 +120,7 @@ function Test() {
 
       {submitted ? (
         <div className="result-container">
-          <h3>Your Score: {score} out of {questions.length}</h3>
+          <h3>{name}, Your Score: {score} out of {questions.length}</h3>
           <p>
             Time Taken: {Math.floor(totalTimeTaken / 60)} minutes and {totalTimeTaken % 60} seconds
           </p>
