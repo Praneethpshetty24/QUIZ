@@ -7,6 +7,7 @@ import Home from "./Components/Home/Home";
 import Test from "./Components/TestQ/Test";
 import Leaderboard from "./Components/Home/Features/Leaderboard";
 import Question from "./Components/TestQ/Question";
+import Admin from "./Components/Admin/Admin";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/test" element={<Test />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/Question" element={<Question />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </Router>
   );

@@ -71,6 +71,7 @@ const Leaderboard = () => {
       <table className="leaderboard-table">
         <thead>
           <tr>
+            <th>Name</th> {/* New column for name */}
             <th>Email</th>
             <th>Score</th>
             <th>Time Taken</th>
@@ -78,8 +79,9 @@ const Leaderboard = () => {
           </tr>
         </thead>
         <tbody>
-          {leaderboardData.map((entry, index) => (
+          {leaderboardData.map((entry) => (
             <tr key={entry.id}>
+              <td>{entry.name}</td> {/* Display user's name */}
               <td>{entry.email}</td>
               <td>{entry.score}</td>
               <td>{formatTime(entry.timeTaken)}</td> {/* Display formatted time */}
@@ -95,7 +97,7 @@ const Leaderboard = () => {
         <div className="popup">
           <div className="popup-content">
             <span className="close-btn" onClick={closePopup}>×</span>
-            <h3>Analytics for {selectedEntry.email}</h3>
+            <h3>Analytics for {selectedEntry.name}</h3>
             <canvas id="analyticsChart" width="400" height="200"></canvas>
           </div>
         </div>
