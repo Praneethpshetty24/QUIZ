@@ -97,7 +97,7 @@ const Leaderboard = () => {
         <div className="popup">
           <div className="popup-content">
             <span className="close-btn" onClick={closePopup}>×</span>
-            <h3>Analytics for {selectedEntry.email}</h3>
+            <h3>Analytics for {selectedEntry.name}</h3>
             <canvas id="analyticsChart" width="400" height="200"></canvas>
           </div>
         </div>
