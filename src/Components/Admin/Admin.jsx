@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
+import Webcam from 'react-webcam';
 import { db } from '../../Firebase';
 import './Admin.css';
 
@@ -25,12 +26,16 @@ function Admin() {
     <div className="admin-container">
       <h2>Admin Dashboard</h2>
       <div className="user-feed-container">
-        {activeTestUsers.map((user, index) => (
-          <div key={index} className="user-feed">
-            <h3>{user.email}</h3>
-            <div className="video-placeholder">Webcam feed of {user.email}</div>
-          </div>
-        ))}
+        {activeTestUsers.length > 0 ? (
+          activeTestUsers.map((user, index) => (
+            <div key={index} className="user-feed">
+              <h3>{user.email}</h3>
+              <Webcam className="webcam-feed" videoConstraints={{ width: 150, height: 150, facingMode: 'user' }} />
+            </div>
+          ))
+        ) : (
+          <p>No active users currently taking the test.</p>
+        )}
       </div>
     </div>
   );

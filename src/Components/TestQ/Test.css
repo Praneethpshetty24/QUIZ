@@ -39,6 +39,10 @@ body {
     border-radius: 8px;
     margin-bottom: 20px;
     width: 100%;
+    height: 200px; /* Fixed height for all questions */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .option {
@@ -50,6 +54,7 @@ body {
     justify-content: space-between;
     width: 100%;
     margin-top: 10px;
+    position: relative; /* Ensures constant placement */
 }
 
 .prev-button, .next-button, .submit-button {
@@ -67,6 +72,23 @@ body {
     background-color: #0056b3;
 }
 
+/* Center the back button at the end */
+.back-button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    margin: 20px auto;
+    display: block;
+    width: fit-content;
+}
+
+.back-button:hover {
+    background-color: #0056b3;
+}
+
 .warning-message {
     color: orange;
     margin: 10px 0;
@@ -77,6 +99,7 @@ body {
     padding: 15px;
     border-radius: 8px;
     margin-top: 20px;
+    width: 100%; /* Ensure consistent width */
 }
 
 .webcam-container {
@@ -106,6 +129,16 @@ body {
     }
 
     .timer {
+        margin-bottom: 10px;
+    }
+
+    .navigation-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .prev-button, .next-button, .submit-button {
+        width: 100%; /* Ensure buttons take full width on small screens */
         margin-bottom: 10px;
     }
 }

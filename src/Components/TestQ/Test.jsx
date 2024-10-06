@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useLocation, useNavigate } from 'react-router-dom';
 import Webcam from 'react-webcam';
 import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { db } from '../../Firebase';
@@ -17,7 +17,8 @@ function Test() {
   const [totalTimeTaken, setTotalTimeTaken] = useState(0); // Total time taken in seconds
   const startTimeRef = useRef(Date.now());
   const timeoutRef = useRef(null);
-  const navigate = useNavigate(); // Use useNavigate to redirect to /home
+  const webcamRef = useRef(null); // Reference for the webcam feed
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -32,18 +33,13 @@ function Test() {
       }
     };
 
-    // Fetch questions on component mount
     fetchQuestions();
-
-    // Display alert for tab switching
     alert('Switching tabs will automatically submit your test!');
 
-    // Set timer for countdown
     timeoutRef.current = setInterval(() => {
       setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
     }, 1000);
 
-    // Event listener to detect tab visibility changes
     const handleVisibilityChange = () => {
       if (document.hidden) {
         handleSubmit(); // Auto-submit if the tab is hidden (i.e., user switched tabs)
@@ -54,7 +50,7 @@ function Test() {
 
     return () => {
       clearInterval(timeoutRef.current);
-      document.removeEventListener('visibilitychange', handleVisibilityChange); // Clean up
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
@@ -70,7 +66,6 @@ function Test() {
     }));
   };
 
-  // Stop the timer and submit the test
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
     clearInterval(timeoutRef.current);
@@ -125,7 +120,7 @@ function Test() {
   };
 
   const handleBackToHome = () => {
-    navigate('/home'); // Navigate back to home page
+    navigate('/home');
   };
 
   return (
@@ -134,16 +129,18 @@ function Test() {
       <div className="header">
         <div className="timer">Time Left: {formatTime(timeLeft)}</div>
         <div className="webcam-container">
-          <Webcam className="webcam-feed" videoConstraints={{ width: 150, height: 150, facingMode: 'user' }} />
+          <Webcam
+            className="webcam-feed"
+            ref={webcamRef}
+            videoConstraints={{ width: 150, height: 150, facingMode: 'user' }}
+          />
         </div>
       </div>
 
       {submitted ? (
         <div className="result-container">
           <h3>{name}, Your Score: {score} out of {questions.length}</h3>
-          <p>
-            Time Taken: {Math.floor(totalTimeTaken / 60)} minutes and {totalTimeTaken % 60} seconds
-          </p>
+          <p>Time Taken: {Math.floor(totalTimeTaken / 60)} minutes and {totalTimeTaken % 60} seconds</p>
           <button className="back-button" onClick={handleBackToHome}>Back to Home</button>
         </div>
       ) : (
