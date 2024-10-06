@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom'; // Import useNavigate
 import Webcam from 'react-webcam';
 import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { db } from '../../Firebase';
@@ -7,7 +7,7 @@ import './Test.css';
 
 function Test() {
   const { state } = useLocation();
-  const { email, uuiId, name } = state || {}; // Include name in the state
+  const { email, uuiId, name } = state || {};
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
@@ -15,8 +15,9 @@ function Test() {
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes (600 seconds)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [totalTimeTaken, setTotalTimeTaken] = useState(0); // Total time taken in seconds
-  const startTimeRef = useRef(Date.now()); // Track start time using a ref to maintain value across renders
+  const startTimeRef = useRef(Date.now());
   const timeoutRef = useRef(null);
+  const navigate = useNavigate(); // Use useNavigate to redirect to /home
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -31,13 +32,30 @@ function Test() {
       }
     };
 
+    // Fetch questions on component mount
     fetchQuestions();
 
+    // Display alert for tab switching
+    alert('Switching tabs will automatically submit your test!');
+
+    // Set timer for countdown
     timeoutRef.current = setInterval(() => {
       setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
     }, 1000);
 
-    return () => clearInterval(timeoutRef.current);
+    // Event listener to detect tab visibility changes
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        handleSubmit(); // Auto-submit if the tab is hidden (i.e., user switched tabs)
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      clearInterval(timeoutRef.current);
+      document.removeEventListener('visibilitychange', handleVisibilityChange); // Clean up
+    };
   }, []);
 
   const getRandomQuestions = (questions, num) => {
@@ -54,8 +72,8 @@ function Test() {
 
   // Stop the timer and submit the test
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    clearInterval(timeoutRef.current); // Stop the timer
+    if (e) e.preventDefault();
+    clearInterval(timeoutRef.current);
 
     let correctAnswers = 0;
     questions.forEach((question) => {
@@ -65,21 +83,21 @@ function Test() {
     });
 
     const endTime = Date.now();
-    const totalTimeTakenInSeconds = Math.floor((endTime - startTimeRef.current) / 1000); // Calculate time in seconds
-    setTotalTimeTaken(totalTimeTakenInSeconds); // Save total time taken in state
+    const totalTimeTakenInSeconds = Math.floor((endTime - startTimeRef.current) / 1000);
+    setTotalTimeTaken(totalTimeTakenInSeconds);
     setScore(correctAnswers);
     setSubmitted(true);
 
     try {
       const testResultsRef = collection(db, 'userTestResults');
       await addDoc(testResultsRef, {
-        name, // Save the user's name
-        email, // Save the user's email
-        uuiId, // Save the user's unique identifier
-        score: correctAnswers, // Save the score
-        totalQuestions: questions.length, // Save the total number of questions
-        timeTaken: totalTimeTakenInSeconds, // Time in seconds
-        timestamp: new Date(), // Save the current timestamp
+        name,
+        email,
+        uuiId,
+        score: correctAnswers,
+        totalQuestions: questions.length,
+        timeTaken: totalTimeTakenInSeconds,
+        timestamp: new Date(),
       });
 
       console.log('Test results saved successfully');
@@ -88,14 +106,12 @@ function Test() {
     }
   };
 
-  // Format time in MM:SS
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
   };
 
-  // Navigation between questions
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -106,6 +122,10 @@ function Test() {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
+  };
+
+  const handleBackToHome = () => {
+    navigate('/home'); // Navigate back to home page
   };
 
   return (
@@ -124,6 +144,7 @@ function Test() {
           <p>
             Time Taken: {Math.floor(totalTimeTaken / 60)} minutes and {totalTimeTaken % 60} seconds
           </p>
+          <button className="back-button" onClick={handleBackToHome}>Back to Home</button>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="test-form">
