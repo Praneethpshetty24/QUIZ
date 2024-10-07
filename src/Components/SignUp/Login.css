@@ -1,106 +1,112 @@
 /* src/Components/SignUp/Login.css */
+body {
+  background-image: url('https://thumbs.dreamstime.com/z/seamless-pattern-question-mark-hand-painted-watercolor-illustration-isolated-white-black-white-template-seamless-160859738.jpg');
+  background-size: cover; /* Ensures the background image covers the entire viewport */
+  background-position: center; /* Centers the background image */
+  background-repeat: no-repeat; /* Prevents the background image from repeating */
+}
+
 .login-container {
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 30px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    background-color: #fefefe;
-    text-align: center;
-    transition: transform 0.3s ease;
-  }
-  
-  .login-container:hover {
-    transform: scale(1.02);
-  }
-  
-  .app-name {
-    margin-bottom: 20px;
-    font-family: 'Arial', sans-serif;
-    color: #007bff;
-    font-size: 24px;
-    letter-spacing: 2px;
-  }
-  
-  h2 {
-    margin-bottom: 20px;
-    font-family: 'Arial', sans-serif;
-    color: #333;
-  }
-  
-  .login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Add space between inputs */
-  }
-  
-  input {
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: border-color 0.3s;
-  }
-  
-  input:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-  
-  button {
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  .error {
-    color: red;
-    font-size: 14px;
-  }
-  
-  p {
-    margin-top: 20px;
-    font-size: 14px;
-  }
-  
-  .toggle-link {
-    color: #007bff;
-    cursor: pointer;
-    margin-left: 5px;
-  }
-  
-  .toggle-link:hover {
-    text-decoration: underline;
-  }
-  
-  /* Responsive styles */
-  @media (max-width: 480px) {
-    .login-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 30px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff; /* Solid white background */
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.login-container:hover {
+  transform: scale(1.02);
+}
+
+.app-name {
+  margin-bottom: 20px;
+  font-family: 'Arial', sans-serif;
+  color: #007bff;
+  font-size: 24px;
+  letter-spacing: 2px;
+}
+
+h2 {
+  margin-bottom: 20px;
+  font-family: 'Arial', sans-serif;
+  color: #333;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Add space between inputs */
+}
+
+input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+button {
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+}
+
+p {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.toggle-link {
+  color: #007bff;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.toggle-link:hover {
+  text-decoration: underline;
+}
+
+/* Responsive styles */
+@media (max-width: 480px) {
+  .login-container {
       padding: 20px;
       width: 90%;
-    }
-  
-    .app-name {
-      font-size: 20px;
-    }
-  
-    h2 {
-      font-size: 20px;
-    }
-  
-    input,
-    button {
-      font-size: 14px;
-    }
   }
-  
+
+  .app-name {
+      font-size: 20px;
+  }
+
+  h2 {
+      font-size: 20px;
+  }
+
+  input,
+  button {
+      font-size: 14px;
+  }
+}

@@ -1,241 +1,176 @@
-/* src/Components/Home/Home.css */
 .home-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #fefefe;
-    min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url(''); /* Add your background image URL here */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
 .navbar {
-    width: 100%;
-    padding: 10px 20px;
-    background: linear-gradient(to right, #007bff, #0056b3);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+  width: 100%;
+  padding: 10px 20px;
+  background: linear-gradient(to right, #007bff, #0056b3);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border: 2px solid #0056b3; /* Border added back to navbar */
 }
 
 .app-name {
-    margin: 0;
-    font-size: 24px;
-    font-family: 'Arial', sans-serif;
+  margin: 0;
+  font-size: 24px;
+  font-family: 'Arial', sans-serif;
+  color: white; /* Set the text color to white */
 }
 
 .nav-links {
-    display: flex;
-    gap: 20px;
+  display: flex;
+  gap: 20px;
 }
 
-.nav-links a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s;
+.nav-links span {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+  cursor: pointer; /* Cursor changes to pointer */
 }
 
-.nav-links a:hover {
-    color: #ffd700; /* Gold color on hover */
+.nav-links span:hover {
+  color: #ffd700; /* Gold color on hover */
 }
 
 .content {
-    text-align: center;
-    margin-top: 50px;
+  text-align: center;
+  margin-top: 50px;
+  background-color: white; /* Solid background to prevent transparency */
+  padding: 20px; /* Added padding */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
 }
 
 .input-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0;
 }
 
 input {
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: border-color 0.3s;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s;
 }
 
 input:focus {
-    border-color: #007bff;
-    outline: none;
+  border-color: #007bff;
+  outline: none;
 }
 
 .take-test-button {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .take-test-button:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 @media (max-width: 600px) {
-    .navbar {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-    .nav-links {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
+  .nav-links {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 }
-/* Add this CSS to your Home.css or a separate CSS file */
 
+/* Popup styling */
 .popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Ensure the popup is on top */
-  }
-  
-  .popup-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-    width: 300px; /* Adjust width as needed */
-  }
-  
-  .close-btn {
-    cursor: pointer;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 20px;
-  }
-  /* General styling for the page */
-.home-container {
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
-  
-  /* Admin Button */
-  .admin-button-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-  }
-  
-  .admin-button {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .admin-button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Admin pop-up */
-  .admin-popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .admin-popup-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    position: relative;
-  }
-  
-  .close-popup {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    color: #333;
-  }
-  
-  .submit-admin-password {
-    margin-top: 10px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-  }
-  
-  /* User not found pop-up */
-  .popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .popup-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    position: relative;
-  }
-  
-  .register-link {
-    color: blue;
-    text-decoration: underline;
-    cursor: pointer;
-  }
-/* NavBar styling */
-.navbar {
-    background-color: #007BFF;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 80px; /* Adjust the border radius for rounder corners */
-  }
-  
-  .navbar .app-name {
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
-  .navbar .nav-links a {
-    color: white;
-    text-decoration: none;
-    margin: 0 15px;
-  }
-  
-  .navbar .nav-links a:hover {
-    text-decoration: underline;
-  }
-    
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure the popup is on top */
+}
+
+.popup-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  width: 300px; /* Adjust width as needed */
+}
+
+/* Admin Button */
+.admin-button-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+.admin-button {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.admin-button:hover {
+  background-color: #0056b3;
+}
+
+/* Admin pop-up */
+.admin-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.admin-popup-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.close-popup {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
