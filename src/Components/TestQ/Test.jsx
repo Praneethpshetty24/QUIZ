@@ -116,6 +116,7 @@ function Test() {
 
     try {
       const blob = new Blob(recordedChunks.current, { type: 'video/webm' });
+      console.log("Blob size:", blob.size); // Check blob size
       const videoRef = ref(storage, `test-videos/${uuiId}_${Date.now()}.webm`);
       const uploadTask = uploadBytesResumable(videoRef, blob);
 
@@ -130,6 +131,7 @@ function Test() {
         },
         async () => {
           const videoURL = await getDownloadURL(uploadTask.snapshot.ref);
+          console.log("Video URL:", videoURL); // Log the video URL
 
           // Save video URL to the 'video' Firestore collection
           const videoCollectionRef = collection(db, 'video');
