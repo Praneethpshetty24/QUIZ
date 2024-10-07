@@ -4,6 +4,9 @@ body {
   background-size: cover; /* Ensures the background image covers the entire viewport */
   background-position: center; /* Centers the background image */
   background-repeat: no-repeat; /* Prevents the background image from repeating */
+  height: 100vh; /* Ensures the body takes up the full viewport height */
+  width: 100vw; /* Ensures the body takes up the full viewport width */
+  overflow: hidden; /* Prevents scrolling if the content exceeds the viewport */
 }
 
 .login-container {
