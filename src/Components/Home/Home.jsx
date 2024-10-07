@@ -50,14 +50,18 @@ function Home() {
     }
   };
 
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
+
   return (
     <div className="home-container">
       <nav className="navbar">
         <h1 className="app-name">THE QUIZ</h1>
         <div className="nav-links">
-          <a href="/leaderboard">Leaderboard</a>
-          <a href="/chat">Chat</a>
-          <a href="/home">Home</a>
+          <span onClick={() => handleNavigation('/leaderboard')}>Leaderboard</span>
+          <span onClick={() => handleNavigation('/chat')}>Chat</span>
+          <span onClick={() => handleNavigation('/home')}>Home</span>
         </div>
       </nav>
       <div className="content">
@@ -116,9 +120,9 @@ function Home() {
           <div className="popup-content">
             <span className="close-popup" onClick={() => setShowPopup(false)}>X</span>
             <p>User not registered. Please register first.</p>
-            <a href="/cred" className="register-link">
+            <span onClick={() => handleNavigation('/cred')} className="register-link">
               Click here to register
-            </a>
+            </span>
           </div>
         </div>
       )}
