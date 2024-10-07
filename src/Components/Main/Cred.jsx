@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { db } from '../../Firebase'; // Adjust the import based on your Firebase setup
 import { collection, addDoc } from 'firebase/firestore'; // Import Firestore functions
+import { IoArrowBack } from 'react-icons/io5'; // Import back icon
 import './Cred.css'; // Import your CSS
 
 function Cred() {
@@ -9,8 +11,9 @@ function Cred() {
   const [age, setAge] = useState('');
   const [dob, setDob] = useState('');
   const [uuiId, setUuiId] = useState('');
-  const [error, setError] = useState(''); // State to hold error messages
-  const [success, setSuccess] = useState(''); // State to hold success messages
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const navigate = useNavigate(); // Hook for navigation
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,7 +21,6 @@ function Cred() {
     setSuccess('');
 
     try {
-      // Create a new document in the credentials collection
       await addDoc(collection(db, 'credentials'), {
         name,
         email,
@@ -27,23 +29,28 @@ function Cred() {
         uuiId,
       });
 
-      setSuccess('Credentials submitted successfully!'); // Set success message
-      // Clear the form after submission
+      setSuccess('Credentials submitted successfully!');
       setName('');
       setEmail('');
       setAge('');
       setDob('');
       setUuiId('');
     } catch (err) {
-      setError('Error submitting credentials: ' + err.message); // Set error message
+      setError('Error submitting credentials: ' + err.message);
     }
+  };
+
+  const handleBackClick = () => {
+    navigate('/decision'); // Navigate to /decision when back button is clicked
   };
 
   return (
     <div className="cred-container">
-      <h2>User Credentials</h2>
-      {error && <p className="error">{error}</p>} {/* Display error message */}
-      {success && <p className="success">{success}</p>} {/* Display success message */}
+      <div className="cred-header">
+        <h2>User Credentials</h2>
+      </div>
+      {error && <p className="error">{error}</p>}
+      {success && <p className="success">{success}</p>}
       <form onSubmit={handleSubmit} className="cred-form">
         <input
           type="text"
@@ -82,6 +89,9 @@ function Cred() {
         />
         <button type="submit">Submit</button>
       </form>
+      <button onClick={handleBackClick} className="back-button">
+        <IoArrowBack className="back-icon" /> Back
+      </button>
     </div>
   );
 }

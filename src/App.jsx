@@ -8,6 +8,8 @@ import Test from "./Components/TestQ/Test";
 import Leaderboard from "./Components/Home/Features/Leaderboard";
 import Question from "./Components/TestQ/Question";
 import Admin from "./Components/Admin/Admin";
+import Ai from "./Components/Home/Features/Ai";
+
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/Question" element={<Question />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/ai" element={<Ai />} />
+      
       </Routes>
     </Router>
   );

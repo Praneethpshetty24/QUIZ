@@ -1,6 +1,6 @@
 import React from 'react';
 import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../../firebase'; // Adjust the import path based on your project structure
+import { db } from '../../Firebase'; // Adjust the import path based on your project structure
 
 function Question() {
   const questionsToUpload = [

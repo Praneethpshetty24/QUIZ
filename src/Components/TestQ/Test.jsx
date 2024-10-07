@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Webcam from 'react-webcam';
 import { collection, getDocs, addDoc } from 'firebase/firestore';
-import { db } from '../../Firebase';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { db, storage } from '../../Firebase'; // Ensure that storage is imported
 import './Test.css';
 
 function Test() {
@@ -12,12 +13,14 @@ function Test() {
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes (600 seconds)
+  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [totalTimeTaken, setTotalTimeTaken] = useState(0); // Total time taken in seconds
+  const [totalTimeTaken, setTotalTimeTaken] = useState(0);
   const startTimeRef = useRef(Date.now());
   const timeoutRef = useRef(null);
-  const webcamRef = useRef(null); // Reference for the webcam feed
+  const webcamRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const recordedChunks = useRef([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,7 +45,7 @@ function Test() {
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        handleSubmit(); // Auto-submit if the tab is hidden (i.e., user switched tabs)
+        handleSubmit(); // Auto-submit if the tab is hidden
       }
     };
 
@@ -51,12 +54,39 @@ function Test() {
     return () => {
       clearInterval(timeoutRef.current);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      stopRecording();
     };
   }, []);
 
   const getRandomQuestions = (questions, num) => {
     const shuffled = questions.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, num);
+  };
+
+  const startRecording = () => {
+    const videoStream = webcamRef.current.video.srcObject;
+
+    if (videoStream) {
+      mediaRecorderRef.current = new MediaRecorder(videoStream, {
+        mimeType: 'video/webm',
+      });
+
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          recordedChunks.current.push(event.data);
+        }
+      };
+
+      mediaRecorderRef.current.start();
+    } else {
+      console.error("Webcam stream is not available.");
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+    }
   };
 
   const handleAnswerChange = (questionId, selectedOption) => {
@@ -69,6 +99,7 @@ function Test() {
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
     clearInterval(timeoutRef.current);
+    stopRecording();
 
     let correctAnswers = 0;
     questions.forEach((question) => {
@@ -84,18 +115,46 @@ function Test() {
     setSubmitted(true);
 
     try {
-      const testResultsRef = collection(db, 'userTestResults');
-      await addDoc(testResultsRef, {
-        name,
-        email,
-        uuiId,
-        score: correctAnswers,
-        totalQuestions: questions.length,
-        timeTaken: totalTimeTakenInSeconds,
-        timestamp: new Date(),
-      });
+      const blob = new Blob(recordedChunks.current, { type: 'video/webm' });
+      const videoRef = ref(storage, `test-videos/${uuiId}_${Date.now()}.webm`);
+      const uploadTask = uploadBytesResumable(videoRef, blob);
 
-      console.log('Test results saved successfully');
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`Upload is ${progress}% done`);
+        },
+        (error) => {
+          console.error('Error uploading video:', error.message);
+        },
+        async () => {
+          const videoURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+          // Save video URL to the 'video' Firestore collection
+          const videoCollectionRef = collection(db, 'video');
+          await addDoc(videoCollectionRef, {
+            uuiId,
+            videoURL,
+            timestamp: new Date(),
+          });
+
+          // Save test results to the 'userTestResults' collection
+          const testResultsRef = collection(db, 'userTestResults');
+          await addDoc(testResultsRef, {
+            name,
+            email,
+            uuiId,
+            score: correctAnswers,
+            totalQuestions: questions.length,
+            timeTaken: totalTimeTakenInSeconds,
+            videoURL, // Save the video URL to Firestore
+            timestamp: new Date(),
+          });
+
+          console.log('Test results and video URL saved successfully');
+        }
+      );
     } catch (error) {
       console.error('Error saving test results:', error.message);
     }

@@ -1,56 +1,88 @@
 .cred-container {
-    max-width: 500px;
-    margin: 50px auto;
-    padding: 30px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    background-color: #fefefe;
-    text-align: center;
-    transition: transform 0.3s ease;
+  width: 100%;
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 15px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  min-height: 80vh;
+}
+
+.cred-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.cred-header h2 {
+  font-size: 24px;
+  color: #333;
+}
+
+.cred-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.cred-form input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.cred-form button {
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.cred-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Adjusting back button placement */
+.back-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Aligns the content to the left */
+  margin-top: 20px;
+  align-self: flex-start; /* Moves button to the left end */
+}
+
+.back-button:hover {
+  background-color: #0056b3;
+}
+
+.back-icon {
+  margin-right: 8px;
+}
+
+/* Ensure page doesn't scroll */
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+  .cred-container {
+    max-width: 90%;
   }
-  
-  .cred-container:hover {
-    transform: scale(1.02);
-  }
-  
-  h2 {
-    margin-bottom: 20px;
-    font-family: 'Arial', sans-serif;
-    color: #333;
-  }
-  
-  .cred-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  input {
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: border-color 0.3s;
-  }
-  
-  input:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-  
-  button {
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
+}
