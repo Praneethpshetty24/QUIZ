@@ -38,7 +38,7 @@ function Test() {
         };
 
         fetchQuestions();
-        alert('Switching tabs will automatically submit your test!');
+        alert('Switching tabs will automatically submit your test! and recording is mandatory for valid test ! ');
 
         timeoutRef.current = setInterval(() => {
             setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
@@ -59,11 +59,13 @@ function Test() {
         };
     }, []);
 
+    
     const getRandomQuestions = (questions, num) => {
-        const shuffled = questions.sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, num);
+        // Use a spread operator to avoid mutating the original array
+        const shuffled = [...questions].sort(() => Math.random() - 0.5); 
+        return shuffled.slice(0, num); // Return the first `num` unique questions
     };
-
+    
     const startRecording = () => {
         alert("Recording will start now!"); // Alert message
         const videoStream = webcamRef.current.video.srcObject;
