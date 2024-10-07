@@ -140,8 +140,6 @@ function Test() {
           await addDoc(videoCollectionRef, {
             name, // Include user's name
             uuiId,
-            videoURL,
-            timestamp: new Date(),
           });
 
           // Save test results to the 'userTestResults' collection
@@ -153,8 +151,6 @@ function Test() {
             score: correctAnswers,
             totalQuestions: questions.length,
             timeTaken: totalTimeTakenInSeconds,
-            videoURL, // Save the video URL to Firestore
-            timestamp: new Date(),
           });
 
           console.log('Test results and video URL saved successfully');
@@ -205,17 +201,6 @@ function Test() {
         <div className="result-container">
           <h3>{name}, Your Score: {score} out of {questions.length}</h3>
           <p>Time Taken: {Math.floor(totalTimeTaken / 60)} minutes and {totalTimeTaken % 60} seconds</p>
-
-          {/* Video Preview */}
-          {videoURL && (
-            <div className="video-preview">
-              <h4>Your Video Recording:</h4>
-              <video width="400" controls>
-                <source src={videoURL} type="video/webm" />
-                Your browser does not support the video tag.
-              </video>
-            </div>
-          )}
 
           <button className="back-button" onClick={handleBackToHome}>Back to Home</button>
         </div>

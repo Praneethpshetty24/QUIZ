@@ -5,6 +5,25 @@ function Ai() {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
 
+  // Simulate AI response based on keywords
+  const generateAiResponse = (userInput) => {
+    const lowerCaseInput = userInput.toLowerCase();
+    
+    if (lowerCaseInput.includes('hello') || lowerCaseInput.includes('hi')) {
+      return 'Hello! How can I assist you today?';
+    } else if (lowerCaseInput.includes('how are you')) {
+      return 'I am just a bot, but thank you for asking! How are you?';
+    } else if (lowerCaseInput.includes('your name')) {
+      return 'I am an AI chat assistant created to help you!';
+    } else if (lowerCaseInput.includes('help')) {
+      return 'I can help with general queries. Ask me anything!';
+    } else if (lowerCaseInput.includes('bye')) {
+      return 'Goodbye! Have a great day!';
+    } else {
+      return 'I am not sure how to respond to that. Can you ask something else?';
+    }
+  };
+
   const handleSend = () => {
     if (input.trim() !== '') {
       const userMessage = { sender: 'user', text: input };
@@ -12,7 +31,7 @@ function Ai() {
 
       // Simulate AI response
       setTimeout(() => {
-        const aiMessage = { sender: 'ai', text: 'This is a simulated AI response.' };
+        const aiMessage = { sender: 'ai', text: generateAiResponse(input) };
         setMessages([...messages, userMessage, aiMessage]);
       }, 1000);
 

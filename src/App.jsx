@@ -9,6 +9,7 @@ import Leaderboard from "./Components/Home/Features/Leaderboard";
 import Question from "./Components/TestQ/Question";
 import Admin from "./Components/Admin/Admin";
 import Ai from "./Components/Home/Features/Ai";
+import Score from "./Components/Home/Features/Score";
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/Question" element={<Question />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/ai" element={<Ai />} />
+        <Route path="/score" element={<Score />} />
       
       </Routes>
     </Router>
