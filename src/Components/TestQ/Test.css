@@ -10,8 +10,8 @@ body {
     margin: auto;
     padding: 20px;
     background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px; /* Slightly larger border radius */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -25,7 +25,8 @@ body {
 }
 
 .title {
-    margin-bottom: 20px;
+    font-size: 24px; /* Increased title size */
+    font-weight: bold;
 }
 
 .timer {
@@ -35,46 +36,82 @@ body {
 
 .question-card {
     background-color: #e9ecef;
-    padding: 15px;
+    padding: 20px; /* Increased padding for better readability */
     border-radius: 8px;
     margin-bottom: 20px;
     width: 100%;
-    height: 200px; /* Fixed height for all questions */
     display: flex;
     flex-direction: column;
     justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Added shadow for depth */
 }
 
 .option {
     margin: 10px 0;
+    padding: 5px; /* Added padding for better clickability */
+}
+
+/* Separate section for recording buttons */
+.recording-buttons {
+    display: flex;
+    justify-content: center; /* Center the buttons horizontally */
+    margin: 20px 0; /* Increased space above and below the recording buttons */
+}
+
+.start-button,
+.stop-button {
+    padding: 12px 20px; /* Increased padding for better touch targets */
+    margin: 0 15px; /* Space between start and stop buttons */
+    border: none;
+    border-radius: 5px;
+    background-color: #28a745; /* Green for start button */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.start-button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.stop-button {
+    background-color: #dc3545; /* Red for stop button */
+}
+
+.stop-button:hover {
+    background-color: #c82333; /* Darker red on hover */
 }
 
 .navigation-buttons {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin-top: 10px;
-    position: relative; /* Ensures constant placement */
+    margin: 20px 0; /* Increased top margin for better spacing */
 }
 
-.prev-button, .next-button, .submit-button {
-    padding: 10px 15px;
-    margin: 5px;
+.prev-button,
+.next-button,
+.submit-button {
+    padding: 12px 20px; /* Increased padding for better touch targets */
+    margin: 0 10px; /* Space between buttons */
     border: none;
     border-radius: 5px;
-    background-color: #007bff;
+    background-color: #007bff; /* Bootstrap primary color */
     color: white;
     cursor: pointer;
-    flex: 1;
+    flex: 1; /* Ensure buttons take equal width */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
 }
 
-.prev-button:hover, .next-button:hover, .submit-button:hover {
-    background-color: #0056b3;
+.prev-button:hover,
+.next-button:hover,
+.submit-button:hover {
+    background-color: #0056b3; /* Darker on hover */
 }
 
 /* Center the back button at the end */
 .back-button {
-    padding: 10px 15px;
+    padding: 12px 20px; /* Consistent padding with other buttons */
     border: none;
     border-radius: 5px;
     background-color: #007bff;
@@ -83,6 +120,7 @@ body {
     margin: 20px auto;
     display: block;
     width: fit-content;
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
 }
 
 .back-button:hover {
@@ -132,13 +170,22 @@ body {
         margin-bottom: 10px;
     }
 
-    .navigation-buttons {
-        flex-direction: column;
+    .recording-buttons {
+        flex-direction: column; /* Stack buttons vertically on small screens */
         align-items: center;
+        margin: 20px 0; /* Maintain spacing on small screens */
     }
 
-    .prev-button, .next-button, .submit-button {
+    .navigation-buttons {
+        flex-direction: column;
+        align-items: stretch; /* Stretch buttons to full width */
+        margin: 20px 0; /* Maintain spacing */
+    }
+
+    .prev-button,
+    .next-button,
+    .submit-button {
         width: 100%; /* Ensure buttons take full width on small screens */
-        margin-bottom: 10px;
+        margin-bottom: 10px; /* Space between buttons */
     }
 }
