@@ -16,6 +16,7 @@ function Test() {
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [totalTimeTaken, setTotalTimeTaken] = useState(0);
+  const [videoURL, setVideoURL] = useState(null); // To store video URL for preview
   const startTimeRef = useRef(Date.now());
   const timeoutRef = useRef(null);
   const webcamRef = useRef(null);
@@ -117,7 +118,7 @@ function Test() {
     try {
       const blob = new Blob(recordedChunks.current, { type: 'video/webm' });
       console.log("Blob size:", blob.size); // Check blob size
-      const videoRef = ref(storage, `test-videos/${uuiId}_${Date.now()}.webm`);
+      const videoRef = ref(storage, `test-videos/${name}_${uuiId}_${Date.now()}.webm`); // Include user name in the video name
       const uploadTask = uploadBytesResumable(videoRef, blob);
 
       uploadTask.on(
@@ -132,10 +133,12 @@ function Test() {
         async () => {
           const videoURL = await getDownloadURL(uploadTask.snapshot.ref);
           console.log("Video URL:", videoURL); // Log the video URL
+          setVideoURL(videoURL); // Store the video URL for preview
 
           // Save video URL to the 'video' Firestore collection
           const videoCollectionRef = collection(db, 'video');
           await addDoc(videoCollectionRef, {
+            name, // Include user's name
             uuiId,
             videoURL,
             timestamp: new Date(),
@@ -202,6 +205,18 @@ function Test() {
         <div className="result-container">
           <h3>{name}, Your Score: {score} out of {questions.length}</h3>
           <p>Time Taken: {Math.floor(totalTimeTaken / 60)} minutes and {totalTimeTaken % 60} seconds</p>
+
+          {/* Video Preview */}
+          {videoURL && (
+            <div className="video-preview">
+              <h4>Your Video Recording:</h4>
+              <video width="400" controls>
+                <source src={videoURL} type="video/webm" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          )}
+
           <button className="back-button" onClick={handleBackToHome}>Back to Home</button>
         </div>
       ) : (
@@ -244,7 +259,9 @@ function Test() {
                 Next
               </button>
             ) : (
-              <button type="submit" className="submit-button">Submit</button>
+              <button type="submit" className="submit-button">
+                Submit
+              </button>
             )}
           </div>
         </form>
