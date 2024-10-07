@@ -100,6 +100,7 @@ function Home() {
       {showAdminPopup && (
         <div className="admin-popup">
           <div className="admin-popup-content">
+            <h1>PASSWD:123456</h1>
             <span className="close-popup" onClick={() => setShowAdminPopup(false)}>X</span>
             <input
               type="password"

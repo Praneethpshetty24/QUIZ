@@ -5,7 +5,7 @@ import './Question.css';
 
 function Question() {
   const [questionCount, setQuestionCount] = useState(0);
-  const questionsToUpload = [
+  /*const questionsToUpload = [
     { question: "What is the capital of France?", options: ["Paris", "Berlin", "Madrid", "Rome"], correctAnswer: "Paris" },
     { question: "Who wrote 'Romeo and Juliet'?", options: ["Mark Twain", "William Shakespeare", "Charles Dickens", "Leo Tolstoy"], correctAnswer: "William Shakespeare" },
     { question: "What is the largest ocean on Earth?", options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"], correctAnswer: "Pacific Ocean" },
@@ -96,7 +96,7 @@ function Question() {
     { question: "Who was the first woman to win a Nobel Prize?", options: ["Marie Curie", "Rosalind Franklin", "Ada Lovelace", "Jane Addams"], correctAnswer: "Marie Curie" },
     { question: "What is the currency used in Japan?", options: ["Yen", "Won", "Dollar", "Rupee"], correctAnswer: "Yen" },
     { question: "What is the largest species of shark?", options: ["Great White", "Hammerhead", "Tiger", "Whale Shark"], correctAnswer: "Whale Shark" },
-];
+]; */
 
 
   const fetchQuestionCount = async () => {

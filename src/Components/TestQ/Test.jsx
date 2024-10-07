@@ -269,6 +269,7 @@ function Test() {
                             Next
                         </button>
                         <button type="button" onClick={startRecording}>Start Recording</button>
+
                         <button type="submit">Submit</button>
                     </div>
                 </form>
