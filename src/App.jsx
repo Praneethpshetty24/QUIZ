@@ -9,7 +9,7 @@ import Leaderboard from "./Components/Home/Features/Leaderboard";
 import Question from "./Components/TestQ/Question";
 import Admin from "./Components/Admin/Admin";
 import Chat from "./Components/Home/Features/Chat";
-import Score from "./Components/Home/Features/Score";
+
 
 
 function App() {
@@ -25,8 +25,7 @@ function App() {
         <Route path="/Question" element={<Question />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/chat" element={<Chat/>} />
-        <Route path="/score" element={<Score />} />
-      
+       
       </Routes>
     </Router>
   );

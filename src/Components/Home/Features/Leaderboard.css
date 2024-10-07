@@ -55,86 +55,6 @@
   background-color: #005f73;
 }
 
-/* Media queries for responsiveness */
-
-/* For tablets and smaller screens */
-@media (max-width: 768px) {
-  .leaderboard-table th,
-  .leaderboard-table td {
-    padding: 10px;
-    font-size: 14px;
-  }
-
-  .analytics-btn {
-    padding: 5px 10px;
-    font-size: 12px;
-  }
-
-  .leaderboard-container {
-    padding: 15px;
-  }
-}
-
-/* For mobile devices */
-@media (max-width: 480px) {
-  .leaderboard-container {
-    padding: 10px;
-    width: 95%;
-    box-shadow: none; /* Remove shadow on mobile */
-  }
-
-  .leaderboard-table th,
-  .leaderboard-table td {
-    padding: 8px;
-    font-size: 12px;
-  }
-
-  .analytics-btn {
-    padding: 4px 8px;
-    font-size: 10px;
-  }
-
-  .leaderboard-table th,
-  .leaderboard-table td {
-    display: block;
-    text-align: left;
-  }
-
-  .leaderboard-table tr {
-    display: block;
-    margin-bottom: 10px;
-  }
-
-  .leaderboard-table th {
-    background-color: transparent;
-    color: #333;
-    font-weight: bold;
-  }
-
-  .leaderboard-table td {
-    border-bottom: 1px solid #ddd;
-    display: block;
-    position: relative;
-    padding-left: 50%;
-  }
-
-  .leaderboard-table td:before {
-    content: attr(data-label);
-    position: absolute;
-    left: 0;
-    width: 50%;
-    padding-left: 15px;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-
-  /* Center the button on mobile */
-  .analytics-btn {
-    margin: 10px auto;
-    display: block;
-  }
-}
-
 /* Popup modal */
 .popup {
   position: fixed;
@@ -171,9 +91,59 @@ canvas {
   margin-top: 20px;
 }
 
-/* Responsive design */
+/* Media queries for responsiveness */
 @media (max-width: 768px) {
+  .leaderboard-container {
+    padding: 15px;
+  }
+
+  .leaderboard-table th,
+  .leaderboard-table td {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .analytics-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
   .popup-content {
     width: 90%;
+  }
+}
+
+/* For mobile devices */
+@media (max-width: 480px) {
+  .leaderboard-container {
+    padding: 10px;
+    width: 95%;
+    box-shadow: none; /* Remove shadow on mobile */
+  }
+
+  .leaderboard-table {
+    display: block; /* Allow scrolling */
+    overflow-x: auto; /* Enable horizontal scroll */
+  }
+
+  .leaderboard-table th,
+  .leaderboard-table td {
+    padding: 8px;
+    font-size: 12px;
+    display: block; /* Stack for better readability */
+    position: relative; /* Allows positioning of pseudo-elements */
+  }
+
+  .leaderboard-table th {
+    border-bottom: 2px solid #ddd; /* Clear separation */
+  }
+
+  .leaderboard-table td {
+    border-bottom: 1px solid #ddd; /* Row separation */
+  }
+
+  .analytics-btn {
+    margin: 10px auto;
+    display: block;
   }
 }

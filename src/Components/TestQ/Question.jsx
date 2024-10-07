@@ -149,9 +149,9 @@ function Question() {
         Click the button below to upload the latest questions.
       </p>
       <button className="upload-button" onClick={uploadQuestions}>Upload Latest Questions</button>
-      <button className="delete-button" onClick={deleteAllQuestions}>
+      {/* <button className="delete-button" onClick={deleteAllQuestions}>
         Delete All Questions
-      </button>
+      </button> */}
     </div>
   );
 }

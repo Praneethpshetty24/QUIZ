@@ -3,19 +3,19 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../../Firebase'; // Import Firebase database
 import './Leaderboard.css'; // Import CSS for styling
 import { Chart, registerables } from 'chart.js';
+
 Chart.register(...registerables);
 
 const Leaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
-  const [selectedEntry, setSelectedEntry] = useState(null); // Track selected entry for the graph
+  const [selectedEntry, setSelectedEntry] = useState(null);
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const testResultsCollectionRef = collection(db, 'userTestResults');
-        const snapshot = await getDocs(testResultsCollectionRef);
+        const snapshot = await getDocs(collection(db, 'userTestResults'));
         const results = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
+        
         // Sort results by score in descending order
         results.sort((a, b) => b.score - a.score);
         setLeaderboardData(results);
@@ -27,7 +27,6 @@ const Leaderboard = () => {
     fetchLeaderboard();
   }, []);
 
-  // Function to format time in minutes and seconds
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -35,23 +34,21 @@ const Leaderboard = () => {
   };
 
   const showAnalytics = (entry) => {
-    setSelectedEntry(entry); // Set the selected entry for graph analysis
+    setSelectedEntry(entry);
     setTimeout(() => drawChart(entry), 100); // Delay to ensure the modal is rendered before drawing
   };
 
-  const closePopup = () => {
-    setSelectedEntry(null); // Close the popup by resetting the selected entry
-  };
+  const closePopup = () => setSelectedEntry(null);
 
   const drawChart = (entry) => {
     const ctx = document.getElementById('analyticsChart').getContext('2d');
     new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['Score', 'Time Taken (seconds)'], // Updated to show time in seconds
+        labels: ['Score', 'Time Taken (seconds)'],
         datasets: [{
           label: 'Test Data',
-          data: [entry.score, entry.timeTaken], // Use timeTaken directly in seconds for the graph
+          data: [entry.score, entry.timeTaken],
           backgroundColor: ['#4CAF50', '#FF6384'],
           borderColor: ['#4CAF50', '#FF6384'],
           borderWidth: 1
@@ -71,7 +68,7 @@ const Leaderboard = () => {
       <table className="leaderboard-table">
         <thead>
           <tr>
-            <th>Name</th> {/* New column for name */}
+            <th>Name</th>
             <th>Email</th>
             <th>Score</th>
             <th>Time Taken</th>
@@ -79,12 +76,12 @@ const Leaderboard = () => {
           </tr>
         </thead>
         <tbody>
-          {leaderboardData.map((entry) => (
+          {leaderboardData.map(entry => (
             <tr key={entry.id}>
-              <td>{entry.name}</td> {/* Display user's name */}
+              <td>{entry.name}</td>
               <td>{entry.email}</td>
               <td>{entry.score}</td>
-              <td>{formatTime(entry.timeTaken)}</td> {/* Display formatted time */}
+              <td>{formatTime(entry.timeTaken)}</td>
               <td>
                 <button className="analytics-btn" onClick={() => showAnalytics(entry)}>Analyze</button>
               </td>
