@@ -65,13 +65,14 @@ function Test() {
     };
 
     const startRecording = () => {
+        alert("Recording will start now!"); // Alert message
         const videoStream = webcamRef.current.video.srcObject;
-
+    
         if (videoStream) {
             mediaRecorderRef.current = new MediaRecorder(videoStream, {
                 mimeType: 'video/webm; codecs=vp8',
             });
-
+    
             recordedChunks.current = []; // Clear previous chunks
             mediaRecorderRef.current.ondataavailable = (event) => {
                 if (event.data.size > 0) {
@@ -79,14 +80,14 @@ function Test() {
                     console.log("Data available size:", event.data.size); // Log data available size
                 }
             };
-
+    
             mediaRecorderRef.current.start();
             console.log("Recording started.");
         } else {
             console.error("Webcam stream is not available.");
         }
     };
-
+    
     const stopRecording = () => {
         if (mediaRecorderRef.current) {
             mediaRecorderRef.current.stop();
@@ -268,7 +269,6 @@ function Test() {
                             Next
                         </button>
                         <button type="button" onClick={startRecording}>Start Recording</button>
-                        <button type="button" onClick={stopRecording}>Stop Recording</button>
                         <button type="submit">Submit</button>
                     </div>
                 </form>
