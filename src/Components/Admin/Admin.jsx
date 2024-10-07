@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../../Firebase'; // Ensure that db and storage are imported
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import './Admin.css';
 
 function Admin() {
   const [videos, setVideos] = useState([]);
-  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchVideos = async () => {
@@ -39,18 +38,33 @@ function Admin() {
     fetchVideos();
   }, []);
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredVideos = videos.filter(video =>
+    video.uuiId.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="admin-container">
-      <button className="question-button" onClick={() => navigate('/Question')}>
-        Question
-      </button>
-      <p className="warning-message">
-        Video preview is not available for free tier of Cloud Storage.
-      </p>
-      <h2>Uploaded Videos</h2>
+      
+      <h2>Uploaded Videos</h2> 
+    
+      <div className="header">
+        <input
+          type="text"
+          placeholder="Search by ID..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+          className="search-input"
+          
+        />
+          <a href="/Question" className="question-button">Question</a>
+      </div>
       <div className="video-list">
-        {videos.length > 0 ? (
-          videos.map(video => (
+        {filteredVideos.length > 0 ? (
+          filteredVideos.map(video => (
             <div key={video.id} className="video-item">
               <h4>{video.uuiId}</h4>
               <video width="320" height="240" controls>

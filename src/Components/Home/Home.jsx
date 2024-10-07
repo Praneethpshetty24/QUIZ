@@ -56,7 +56,7 @@ function Home() {
         <h1 className="app-name">THE QUIZ</h1>
         <div className="nav-links">
           <a href="/leaderboard">Leaderboard</a>
-          <a href="/ai">AI chat</a>
+          <a href="/chat">Chat</a>
           <a href="/home">Home</a>
         </div>
       </nav>

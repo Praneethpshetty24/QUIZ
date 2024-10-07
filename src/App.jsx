@@ -8,7 +8,7 @@ import Test from "./Components/TestQ/Test";
 import Leaderboard from "./Components/Home/Features/Leaderboard";
 import Question from "./Components/TestQ/Question";
 import Admin from "./Components/Admin/Admin";
-import Ai from "./Components/Home/Features/Ai";
+import Chat from "./Components/Home/Features/Chat";
 import Score from "./Components/Home/Features/Score";
 
 
@@ -24,7 +24,7 @@ function App() {
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/Question" element={<Question />} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/ai" element={<Ai />} />
+        <Route path="/chat" element={<Chat/>} />
         <Route path="/score" element={<Score />} />
       
       </Routes>
