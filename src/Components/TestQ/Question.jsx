@@ -91,7 +91,11 @@ function Question() {
   return (
     <div>
       <h2>Upload Questions</h2>
-      <button onClick={uploadQuestions}>Upload Questions</button>
+      <p>
+        If you have contacted the team, the questions will be updated here. 
+        Click the button below to upload the latest questions.
+      </p>
+      <button onClick={uploadQuestions}>Upload Latest Questions</button>
     </div>
   );
 }
