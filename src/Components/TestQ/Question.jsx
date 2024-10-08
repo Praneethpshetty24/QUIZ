@@ -5,13 +5,11 @@ import './Question.css';
 
 // Populate this array with your questions
 const questionsToUpload = [
- /* { question: "Which planet is known as the 'Giant Planet'?", options: ["Mars", "Jupiter", "Neptune", "Saturn"], correctAnswer: "Jupiter" },
-{ question: "What is the largest ocean on Earth?", options: ["Atlantic Ocean", "Indian Ocean", "Southern Ocean", "Pacific Ocean"], correctAnswer: "Pacific Ocean" },
-
-required questions can be added here 
-*/
-
+  { question: "Which planet is known for its prominent rings?", options: ["Jupiter", "Saturn", "Uranus", "Neptune"], correctAnswer: "Saturn" },
+  { question: "Who was the first female Prime Minister of the United Kingdom?", options: ["Margaret Thatcher", "Theresa May", "Angela Merkel", "Indira Gandhi"], correctAnswer: "Margaret Thatcher" }
 ];
+
+
 
 function Question() {
   const [questionCount, setQuestionCount] = useState(0);

@@ -121,6 +121,11 @@ body {
     display: block;
     width: fit-content;
     transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+    position: fixed; /* Make it fixed at the bottom */
+    bottom: 20px; /* Position it above the bottom edge */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust for centering */
+    z-index: 1000; /* Ensure it stays above other content */
 }
 
 .back-button:hover {
@@ -138,6 +143,8 @@ body {
     border-radius: 8px;
     margin-top: 20px;
     width: 100%; /* Ensure consistent width */
+    max-height: 400px; /* Set a max height */
+    overflow-y: auto; /* Enable vertical scrolling */
 }
 
 .webcam-container {
