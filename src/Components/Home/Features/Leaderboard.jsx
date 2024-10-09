@@ -68,6 +68,7 @@ const Leaderboard = () => {
       <table className="leaderboard-table">
         <thead>
           <tr>
+            <th>Rank</th>
             <th>Name</th>
             <th>Email</th>
             <th>Score</th>
@@ -76,8 +77,14 @@ const Leaderboard = () => {
           </tr>
         </thead>
         <tbody>
-          {leaderboardData.map(entry => (
+          {leaderboardData.map((entry, index) => (
             <tr key={entry.id}>
+              <td>
+                {index === 0 && <span role="img" aria-label="1st">🥇</span>}
+                {index === 1 && <span role="img" aria-label="2nd">🥈</span>}
+                {index === 2 && <span role="img" aria-label="3rd">🥉</span>}
+                {index > 2 && index + 1}
+              </td>
               <td>{entry.name}</td>
               <td>{entry.email}</td>
               <td>{entry.score}</td>
