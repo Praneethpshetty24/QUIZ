@@ -108,21 +108,39 @@ function Test() {
         if (e) e.preventDefault();
         clearInterval(timeoutRef.current);
         stopRecording();
-
+    
         let correctAnswers = 0;
         questions.forEach((question) => {
             if (answers[question.id] === question.correctAnswer) {
                 correctAnswers += 1;
             }
         });
-
+    
         const endTime = Date.now();
         const totalTimeTakenInSeconds = Math.floor((endTime - startTimeRef.current) / 1000);
         setTotalTimeTaken(totalTimeTakenInSeconds);
         setScore(correctAnswers);
         setSubmitted(true);
-
+    
+        // Log to see the calculated score before saving
+        console.log("Calculated Score:", correctAnswers); 
+    
+        // Save test results to the 'userTestResults' collection immediately after scoring
         try {
+            const testResultsRef = collection(db, 'userTestResults');
+            await addDoc(testResultsRef, {
+                name,
+                email,
+                uuiId,
+                score: correctAnswers, // Directly using correctAnswers for score
+                totalQuestions: questions.length,
+                timeTaken: totalTimeTakenInSeconds,
+                timestamp: new Date(),
+            });
+    
+            console.log('Test results saved successfully');
+    
+            // Now proceed to upload the video
             const blob = new Blob(recordedChunks.current, { type: 'video/webm' });
             console.log("Blob size before upload:", blob.size);
             
@@ -130,10 +148,10 @@ function Test() {
                 console.error("Blob size is 0. Cannot upload.");
                 return;
             }
-
+    
             const videoRef = ref(storage, `test-videos/${name}_${uuiId}_${Date.now()}.webm`); // Include user name in the video name
             const uploadTask = uploadBytesResumable(videoRef, blob);
-
+    
             uploadTask.on(
                 'state_changed',
                 (snapshot) => {
@@ -147,7 +165,7 @@ function Test() {
                     const videoURL = await getDownloadURL(uploadTask.snapshot.ref);
                     console.log("Video URL:", videoURL);
                     setVideoURL(videoURL); // Store the video URL for preview
-
+    
                     // Save video URL to the 'video' Firestore collection
                     const videoCollectionRef = collection(db, 'video');
                     await addDoc(videoCollectionRef, {
@@ -156,27 +174,15 @@ function Test() {
                         videoURL,
                         timestamp: new Date(),
                     });
-
-                    // Save test results to the 'userTestResults' collection
-                    const testResultsRef = collection(db, 'userTestResults');
-                    await addDoc(testResultsRef, {
-                        name,
-                        email,
-                        uuiId,
-                        score: correctAnswers,
-                        totalQuestions: questions.length,
-                        timeTaken: totalTimeTakenInSeconds,
-                        videoURL, // Save the video URL to Firestore
-                        timestamp: new Date(),
-                    });
-
-                    console.log('Test results and video URL saved successfully');
+    
+                    console.log('Video URL saved successfully');
                 }
             );
         } catch (error) {
-            console.error('Error saving test results:', error.message);
+            console.error('Error saving test results or video:', error.message);
         }
     };
+    
 
     const formatTime = (seconds) => {
         const minutes = Math.floor(seconds / 60);
