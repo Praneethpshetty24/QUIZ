@@ -89,8 +89,8 @@ function Cred() {
         />
         <button type="submit">Submit</button>
       </form>
-      <button onClick={handleBackClick} className="back-button">
-        <IoArrowBack className="back-icon" /> Back
+      <button onClick={handleBackClick} className="back">
+        Back
       </button>
     </div>
   );

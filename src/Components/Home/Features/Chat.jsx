@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../../../Firebase'; // Adjust the path if necessary
+import { db } from '../../../Firebase'; 
 import { collection, addDoc, onSnapshot } from 'firebase/firestore';
 import './Chat.css';
 
